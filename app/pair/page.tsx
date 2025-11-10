@@ -16,7 +16,7 @@ export default function PairPage() {
       return;
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API;
+    const apiUrl = process.env.NEXT_PUBLIC_API || "http://ballast.proxy.rlwy.net:11473";
     if (!apiUrl) {
       setError('API URL is not configured. Please contact the administrator.');
       return;
