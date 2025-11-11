@@ -20,7 +20,7 @@ export default function LoadingScreen() {
 
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1500);
 
     return () => {
       clearTimeout(timer);
@@ -32,10 +32,16 @@ export default function LoadingScreen() {
     <AnimatePresence mode="wait">
       {isLoading && (
         <motion.div
+          key="loading"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background overflow-hidden"
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          onAnimationComplete={(definition) => {
+            if (definition === "exit") {
+              console.log("Loading screen exited");
+            }
+          }}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-background overflow-hidden"
         >
           {/* Animated background gradient */}
           <motion.div

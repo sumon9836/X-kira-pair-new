@@ -10,9 +10,8 @@ export default function Home() {
   return (
     <>
       <AnimatedBackground />
-      <LoadingScreen />
       <CustomCursor />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background relative z-10">
         {/* Header */}
         <header className="border-b border-white/10 sticky top-0 z-50" style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
           <div className="container mx-auto px-6 py-5 flex items-center justify-between">
