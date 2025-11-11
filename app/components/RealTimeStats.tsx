@@ -23,9 +23,15 @@ export default function RealTimeStats() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('/api/sessions');
+        const response = await fetch('/api/sessions', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         if (response.ok) {
-          const data: SessionsResponse = await response.json();
+          const data = await response.json();
+          console.log('Real-time stats updated:', data);
           setTotalSessions(data.total || 0);
         }
         setLoading(false);
@@ -38,8 +44,8 @@ export default function RealTimeStats() {
     // Fetch immediately
     fetchStats();
 
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchStats, 30000);
+    // Refresh every 10 seconds for more real-time updates
+    const interval = setInterval(fetchStats, 10000);
 
     return () => clearInterval(interval);
   }, []);

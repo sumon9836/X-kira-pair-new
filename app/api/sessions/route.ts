@@ -16,17 +16,13 @@ interface SessionsResponse {
 
 export async function GET() {
   let total = 0;
-  const debug = {
-    apiUrl: process.env.NEXT_PUBLIC_API || "NOT_SET",
-    apiProUrl: process.env.NEXT_PUBLIC_API_PRO || "NOT_SET",
-    apiResponse: null as any,
-    apiProResponse: null as any,
-  };
+  let apiCount = 0;
+  let apiProCount = 0;
   
   const apiUrl = process.env.NEXT_PUBLIC_API || "";
   const apiProUrl = process.env.NEXT_PUBLIC_API_PRO || "";
 
-  console.log('Fetching sessions from:', { apiUrl, apiProUrl });
+  console.log('📊 Fetching real-time sessions...');
 
   // Fetch from regular API
   if (apiUrl) {
@@ -36,23 +32,21 @@ export async function GET() {
         headers: {
           'Accept': 'application/json',
         },
-        cache: 'no-cache'
+        cache: 'no-store',
+        next: { revalidate: 0 }
       });
-      console.log('API response status:', response.status);
+      
       if (response.ok) {
         const data: SessionsResponse = await response.json();
-        console.log('API data:', data);
-        debug.apiResponse = data;
-        total += data.total || 0;
+        apiCount = data.total || 0;
+        total += apiCount;
+        console.log(`✅ API: ${apiCount} sessions`);
       } else {
-        const text = await response.text();
-        console.warn('API response not OK:', response.status, text);
+        console.warn(`⚠️ API response: ${response.status}`);
       }
     } catch (error) {
-      console.error('API endpoint error:', apiUrl, error);
+      console.error('❌ API error:', error);
     }
-  } else {
-    console.warn('NEXT_PUBLIC_API not set');
   }
 
   // Fetch from PRO API
@@ -63,25 +57,40 @@ export async function GET() {
         headers: {
           'Accept': 'application/json',
         },
-        cache: 'no-cache'
+        cache: 'no-store',
+        next: { revalidate: 0 }
       });
-      console.log('API PRO response status:', response.status);
+      
       if (response.ok) {
         const data: SessionsResponse = await response.json();
-        console.log('API PRO data:', data);
-        debug.apiProResponse = data;
-        total += data.total || 0;
+        apiProCount = data.total || 0;
+        total += apiProCount;
+        console.log(`✅ API PRO: ${apiProCount} sessions`);
       } else {
-        const text = await response.text();
-        console.warn('API PRO response not OK:', response.status, text);
+        console.warn(`⚠️ API PRO response: ${response.status}`);
       }
     } catch (error) {
-      console.error('API PRO endpoint error:', apiProUrl, error);
+      console.error('❌ API PRO error:', error);
     }
-  } else {
-    console.warn('NEXT_PUBLIC_API_PRO not set');
   }
 
-  console.log('Total sessions:', total);
-  return NextResponse.json({ total, debug });
+  console.log(`🎯 TOTAL SESSIONS: ${total} (API: ${apiCount} + PRO: ${apiProCount})`);
+  
+  return NextResponse.json(
+    { 
+      total,
+      breakdown: {
+        api: apiCount,
+        apiPro: apiProCount
+      },
+      timestamp: new Date().toISOString()
+    },
+    {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    }
+  );
 }
