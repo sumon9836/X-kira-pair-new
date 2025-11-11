@@ -37,22 +37,10 @@
   }
 
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 100px;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    * {
-      scroll-behavior: smooth;
-    }
-  }
-
   body {
-    scroll-behavior: smooth;
     overflow-x: hidden;
     font-family: 'Inter', 'Geist', system-ui, -apple-system, sans-serif;
     background-color: #000000;

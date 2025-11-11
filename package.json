@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@popmotion/popcorn": "^0.4.4",
+    "@studio-freight/lenis": "^1.0.42",
     "firebase": "^12.5.0",
     "firebase-admin": "^13.6.0",
     "framer-motion": "^11.11.17",

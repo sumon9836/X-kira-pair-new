@@ -4,11 +4,13 @@ import Link from 'next/link';
 import LoadingScreen from './components/LoadingScreen';
 import AnimatedBackground from './components/AnimatedBackground';
 import CustomCursor from './components/CustomCursor';
-import RealTimeStats from './components/RealTimeStats'; // Added import
+import SmoothScroll from './components/SmoothScroll';
+import RealTimeStats from './components/RealTimeStats';
 
 export default function Home() {
   return (
     <>
+      <SmoothScroll />
       <AnimatedBackground />
       <CustomCursor />
       <div className="min-h-screen bg-background relative z-10">

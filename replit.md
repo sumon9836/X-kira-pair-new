@@ -19,7 +19,7 @@ Preferred communication style: Simple, everyday language.
 - Modular component-based architecture with 20+ reusable components
 - All components located in `app/components/` directory
 - Each section (Hero, About, Skills, Experience, Education, Certifications, Projects, Testimonials, Contact) is a standalone component
-- Shared UI components include: Navbar, Footer, LoadingScreen, CustomCursor, ScrollProgress, AnimatedBackground
+- Shared UI components include: Navbar, Footer, LoadingScreen, CustomCursor, ScrollProgress, AnimatedBackground, SmoothScroll
 
 **Styling Strategy**:
 - TailwindCSS 4 for utility-first styling
@@ -29,10 +29,12 @@ Preferred communication style: Simple, everyday language.
 
 **Animation System**:
 - Framer Motion for all animations and transitions
+- Lenis smooth scrolling for butter-smooth momentum-based page scrolling
 - Scroll-triggered animations using `useInView` hook for performance
 - Custom animation variants for consistent motion design
 - Advanced effects: parallax text scrolling, magnetic buttons, custom cursor tracking
 - Spring-based physics for natural movement
+- Accessibility: Respects prefers-reduced-motion for users who need reduced animations
 
 **State Management**:
 - React hooks (useState, useEffect, useRef) for local component state
@@ -116,6 +118,10 @@ Preferred communication style: Simple, everyday language.
   - Provides: useScroll, useInView, useSpring, useMotionValue hooks
 - **@popmotion/popcorn**: v0.4.4 - Utility functions for animation
   - Used for: wrap function in parallax text scrolling
+- **@studio-freight/lenis**: v1.0.42 - Premium smooth scrolling library
+  - Used for: Physics-based momentum scrolling with custom easing
+  - Features: Proper RAF cleanup, accessibility support (prefers-reduced-motion)
+  - Provides butter-smooth scrolling experience across the entire website
 
 ## Font System
 
