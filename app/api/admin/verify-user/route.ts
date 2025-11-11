@@ -1,6 +1,14 @@
+
 import { NextResponse } from 'next/server';
 
 const PERMANENT_ADMIN_KEY = '9836';
+
+// In-memory storage for verified users
+const verifiedUsers: Record<string, {
+  phoneNumber: string;
+  verified: boolean;
+  verifiedAt: string;
+}> = {};
 
 export async function POST(request: Request) {
   try {
@@ -21,6 +29,13 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // Store or update user verification status
+    verifiedUsers[phoneNumber] = {
+      phoneNumber,
+      verified: verified !== undefined ? verified : true,
+      verifiedAt: new Date().toISOString()
+    };
 
     return NextResponse.json({
       status: 'success',
@@ -48,7 +63,7 @@ export async function GET(request: Request) {
   try {
     return NextResponse.json({
       status: 'success',
-      users: {}
+      users: verifiedUsers
     });
   } catch (error) {
     console.error('Error:', error);
