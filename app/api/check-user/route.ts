@@ -34,9 +34,12 @@ export async function GET(request: Request) {
     }
   } catch (error) {
     console.error('Firebase error:', error);
-    return NextResponse.json(
-      { status: 'error', message: 'Failed to check user verification status' },
-      { status: 500 }
-    );
+    // Return unverified status on any error (including permission denied)
+    // This will trigger WhatsApp redirect in the frontend
+    return NextResponse.json({
+      status: 'error',
+      verified: false,
+      message: 'Verification check failed - please contact admin'
+    });
   }
 }

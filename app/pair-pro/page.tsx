@@ -26,13 +26,16 @@ export default function PairProPage() {
       setCheckingVerification(true);
       const verifyResponse = await fetch(`/api/check-user?phoneNumber=${phoneNumber}`);
       const verifyData = await verifyResponse.json();
-      setCheckingVerification(false);
 
-      if (verifyData.status === 'success' && !verifyData.verified) {
+      // If verification check fails or user is not verified, redirect to WhatsApp
+      if (verifyData.status === 'error' || !verifyData.verified) {
         window.location.href = 'https://wa.me/917003816486?text=pair%20me%20x-kira%20pro';
         return;
       }
 
+      setCheckingVerification(false);
+
+      // Only proceed with pairing if user is verified
       const response = await fetch(`/api/pair-pro?code=${phoneNumber}`);
       
       if (!response.ok) {
