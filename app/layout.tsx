@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import LoadingScreen from "./components/LoadingScreen";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,13 +40,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
-        <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/Rks7b8rJ/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/27vZkKR2/android-chrome-192x192.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="https://i.ibb.co/6RChJDjq/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/j99hTVHV/IMG-20251111-WA0012.jpg" />
+        <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/j99hTVHV/IMG-20251111-WA0012.jpg" />
+        <link rel="icon" type="image/png" sizes="16x16" href="https://i.ibb.co/j99hTVHV/IMG-20251111-WA0012.jpg" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <LoadingScreen />
         {children}
       </body>
     </html>

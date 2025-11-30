@@ -1,6 +1,6 @@
 # Overview
 
-A modern, animated portfolio website built with Next.js 16 showcasing a developer's work, skills, experience, and contact information. The site features advanced animations powered by Framer Motion, a clean minimal design with TailwindCSS, and centralized configuration through a single JSON file. The project emphasizes visual appeal through custom cursors, parallax effects, animated backgrounds, and smooth page transitions.
+A WhatsApp bot pairing website built with Next.js 16 featuring Firebase-based user verification system. The site includes a public pairing page (/pair-pro) that verifies users against a Firebase database before allowing access, and an admin panel (/admin) for managing user verification. The project emphasizes security with header-based authentication and session management.
 
 # User Preferences
 
@@ -19,7 +19,7 @@ Preferred communication style: Simple, everyday language.
 - Modular component-based architecture with 20+ reusable components
 - All components located in `app/components/` directory
 - Each section (Hero, About, Skills, Experience, Education, Certifications, Projects, Testimonials, Contact) is a standalone component
-- Shared UI components include: Navbar, Footer, LoadingScreen, CustomCursor, ScrollProgress, AnimatedBackground
+- Shared UI components include: Navbar, Footer, LoadingScreen, CustomCursor, ScrollProgress, AnimatedBackground, SmoothScroll
 
 **Styling Strategy**:
 - TailwindCSS 4 for utility-first styling
@@ -29,10 +29,12 @@ Preferred communication style: Simple, everyday language.
 
 **Animation System**:
 - Framer Motion for all animations and transitions
+- Lenis smooth scrolling for butter-smooth momentum-based page scrolling
 - Scroll-triggered animations using `useInView` hook for performance
 - Custom animation variants for consistent motion design
 - Advanced effects: parallax text scrolling, magnetic buttons, custom cursor tracking
 - Spring-based physics for natural movement
+- Accessibility: Respects prefers-reduced-motion for users who need reduced animations
 
 **State Management**:
 - React hooks (useState, useEffect, useRef) for local component state
@@ -116,6 +118,10 @@ Preferred communication style: Simple, everyday language.
   - Provides: useScroll, useInView, useSpring, useMotionValue hooks
 - **@popmotion/popcorn**: v0.4.4 - Utility functions for animation
   - Used for: wrap function in parallax text scrolling
+- **@studio-freight/lenis**: v1.0.42 - Premium smooth scrolling library
+  - Used for: Physics-based momentum scrolling with custom easing
+  - Features: Proper RAF cleanup, accessibility support (prefers-reduced-motion)
+  - Provides butter-smooth scrolling experience across the entire website
 
 ## Font System
 
@@ -143,17 +149,66 @@ Preferred communication style: Simple, everyday language.
 - Automatic code splitting
 - Image optimization through Next.js Image component
 
-**No Backend/Database**: 
-- Pure frontend application
-- Contact form currently simulates submission (no actual backend integration)
-- All data stored in settings.json (no CMS or database)
+**Firebase Integration**: 
+- Firebase Realtime Database for user verification data
+- Secure admin authentication using environment variables
+- Session-based authentication with automatic logout on unauthorized access
+- API routes handle all Firebase operations server-side
+
+## Firebase Database Integration
+
+**User Verification System**:
+- Firebase Realtime Database stores user verification status
+- Users database structure: `users/{phoneNumber}` with fields: `verified`, `phoneNumber`, `verifiedAt`
+- `/pair-pro` page checks verification before allowing pairing
+- Unverified users are automatically redirected to WhatsApp contact
+
+**Admin Panel** (`/admin`):
+- Secure admin authentication using header-based key transmission
+- Session-based authentication (sessionStorage)
+- Features: View all users, verify/unverify users, add new users
+- Auto-logout on unauthorized access (401 responses)
+- Server-side validation on all admin operations
+
+**API Routes**:
+- `/api/check-user` - Check if a phone number is verified (GET)
+- `/api/admin/verify-user` - Admin operations for user management (GET/POST)
+  - GET: Retrieve all users (requires x-admin-key header)
+  - POST: Verify/unverify a user (requires x-admin-key header)
+
+**Security Features**:
+- Admin key transmitted only via HTTP headers (never in URL/query/body)
+- Server-side key validation before any database operations
+- SessionStorage for client-side key persistence (cleared on logout)
+- Automatic session expiration on unauthorized responses
+- No admin key exposure in logs or browser history
+
+## Environment Variables Required
+
+**Firebase Configuration** (all required):
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_DATABASE_URL`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `NEXT_PUBLIC_FIREBASE_APP_ID`
+
+**Admin Authentication**:
+- `ADMIN_KEY` - Secret key for admin panel access
+
+**External APIs**:
+- `NEXT_PUBLIC_API` - API endpoint for standard pairing
+- `NEXT_PUBLIC_API_PRO` - API endpoint for PRO pairing
 
 ## Third-Party Integrations
 
-**Potential Integrations** (referenced but not implemented):
-- Email service for contact form (mailto links only)
-- Google Analytics (site verification code in settings)
-- Social media platforms (links provided)
-- CV/Resume download (file path in settings.json)
+**Firebase** (Google Cloud Platform):
+- Realtime Database for user verification data
+- Configuration via environment variables
+- Client SDK for browser-side operations
+- Server-side operations via API routes
 
-**No Current External APIs**: Application is self-contained with no runtime API dependencies
+**External Pairing APIs**:
+- WhatsApp pairing service integration
+- Automatic redirect to WhatsApp for unverified users
